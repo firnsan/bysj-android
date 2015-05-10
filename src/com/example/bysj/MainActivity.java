@@ -119,7 +119,12 @@ public class MainActivity extends Activity implements OnClickListener, OnTouchLi
 		switch(v.getId()) {
 		case R.id.radio:
 			Log.i("test", "radio被点击");
-			play();
+			//play();
+			byte[] buf = {0x7F, 0x06, 0x01};
+			Message msg = new Message();
+			msg.what = 0x123;
+			msg.obj = buf;
+			netThread_.revHandler_.sendMessage(msg);
 			break;
 
 		}
