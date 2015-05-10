@@ -152,45 +152,64 @@ public class MainActivity extends Activity implements OnClickListener, OnTouchLi
 		case R.id.forward:
 			buf[1] = 0x01;
 			if (action == MotionEvent.ACTION_UP) {
-				break;
+				buf[2] = 0x00;
 			}
-			Log.i("test", "forward被点击");  
-			buf[2] = 0x01;
+			if (action == MotionEvent.ACTION_DOWN) {
+				Log.i("test", "forward被down");  
+				buf[2] = 0x01;
+			}
+			//Log.i("test", "forward被点击");  
+			//buf[2] = 0x01;
 			break;
 		
 		case R.id.back:
 			buf[1] = 0x02;
 			if (action == MotionEvent.ACTION_UP) {
-				break;
+				buf[2] = 0x00;
+			}
+			if (action == MotionEvent.ACTION_DOWN) {
+				Log.i("test", "back被down");  
+				buf[2] = 0x01;
 			}
 
-			Log.i("test", "bakc被点击");  
-			buf[2] = 0x01;
+			//Log.i("test", "bakc被点击");  
+			//buf[2] = 0x01;
 			break;	
 		
 		case R.id.left:
 			buf[1] = 0x03;
 			if (action == MotionEvent.ACTION_UP) {
-				break;
+				buf[2] = 0x00;
 			}
-			Log.i("test", "left被点击");  
-			buf[2] = 0x01;
+			if (action == MotionEvent.ACTION_DOWN) {
+				Log.i("test", "left被down");  
+				buf[2] = 0x01;
+			}
+			//Log.i("test", "left被点击");  
+			//buf[2] = 0x01;
 			break;
 			
 		case R.id.right:
 			buf[1] = 0x04;
 			if (action == MotionEvent.ACTION_UP) {
-				break;
+				buf[2] = 0x00;
 			}
-			Log.i("test", "right被点击");  
-			buf[2] = 0x01;
+			if (action == MotionEvent.ACTION_DOWN) {
+				Log.i("test", "right被down");  
+				buf[2] = 0x01;
+			}
+			//Log.i("test", "right被点击");  
+			//buf[2] = 0x01;
 			break;
 		}
 		
-		Message msg = new Message();
-		msg.what = 0x123;
-		msg.obj = buf;
-		netThread_.revHandler_.sendMessage(msg);
+		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN){
+			Message msg = new Message();
+			msg.what = 0x123;
+			msg.obj = buf;
+			netThread_.revHandler_.sendMessage(msg);
+		}
+
 		return false;
 	}
 }
