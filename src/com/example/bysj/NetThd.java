@@ -13,28 +13,61 @@ import android.os.Message;
 import android.util.Log;
 
 public class NetThd implements Runnable {
+	private String ip_;
+	private int port_;
+	
+	boolean quited_ = false;
+	
 	private Socket socket_;
 	
 	Handler revHandler_; //从UI获取命令
 	Handler drawHandler_; //属于画图线程的handler
 	
+	Thread getPicThd_; //接收图片数据的线程
 	
 	OutputStream os_ = null;
 	InputStream is_ = null;
 	
-	public NetThd(Handler drawHandler) {
+	public NetThd(String address, Handler drawHandler) {
 		drawHandler_ = drawHandler;
+		Log.i("NetThd", "address: " + address);
+		String temp[] = address.split(":");
+		ip_ = new String(temp[0]);
+		port_ = Integer.parseInt(temp[1]);
+		//ip_ = "192.168.137.1";
+		//port_ = 9898;
+		
+	}
+	
+	public void closeThd() {
+
+		quited_ = true;
+		try {
+			socket_.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			getPicThd_.join();
+		}
+		catch (InterruptedException e){
+			e.printStackTrace();
+		}
+		
+
 	}
 	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		try {
-			socket_ = new Socket("192.168.137.1", 9898);
+			socket_ = new Socket(ip_, port_);
 			os_ = socket_.getOutputStream();
 			is_ = socket_.getInputStream();
 		
-			new Thread() {
+			getPicThd_ = new Thread() {
 				private byte[] buff = new byte[1000*1000]; 
 				private Bitmap picContext = Bitmap.createBitmap(1366, 768, Bitmap.Config.ARGB_8888);;
 				
@@ -43,7 +76,7 @@ public class NetThd implements Runnable {
 					int bytesRead = 0; 
 					int nBytes;
 					try {
-						while (true) {
+						while (!quited_) {
 							/* FLAG : 0xff */
 							/* SIZE : 4 bytes */
 							/* DATA : SIZE bytes */
@@ -76,7 +109,9 @@ public class NetThd implements Runnable {
 						e.printStackTrace();
 					}
 				}
-			}.start();
+			};
+			getPicThd_.start();
+			
 			Looper.prepare();
 			
 			revHandler_ = new Handler() {

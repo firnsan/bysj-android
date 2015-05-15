@@ -62,13 +62,7 @@
         android:layout_alignLeft="@+id/back"
         android:text="↑" />
 
-    <Button
-        android:id="@+id/stop"
-        android:layout_width="70dp"
-        android:layout_height="45dp"
-        android:layout_alignTop="@+id/right"
-        android:layout_toRightOf="@+id/right"
-        android:text="stop" />
+    
 
     <Button
         android:id="@+id/radio"
@@ -76,7 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:text="Button" />
+        android:layout_marginRight="20dp"
+        android:text="Vedio" />
 
 </RelativeLayout>
 

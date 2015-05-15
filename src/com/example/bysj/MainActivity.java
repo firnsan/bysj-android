@@ -4,6 +4,7 @@ package com.example.bysj;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -52,12 +53,6 @@ public class MainActivity extends Activity implements OnClickListener, OnTouchLi
 		player_ = new MediaPlayer();
 		vibrator_ = ( Vibrator ) getApplication().getSystemService(Service.VIBRATOR_SERVICE); 
 		
-		//新建ClientThread来连接小车、将按钮的操作发送到小车
-		drawThread_ = new DrawPicThd(surface_);
-		drawThread_.start();
-		netThread_ = new NetThd(drawThread_.handler_);
-		new Thread(netThread_).start();
-		
 		Button radioBtn = (Button)findViewById(R.id.radio);
 		Button forwardBtn = (Button)findViewById(R.id.forward);
 		Button backBtn = (Button)findViewById(R.id.back);
@@ -70,6 +65,8 @@ public class MainActivity extends Activity implements OnClickListener, OnTouchLi
 		leftBtn.setOnTouchListener(this);
 		rightBtn.setOnTouchListener(this);
 		
+		Intent intent = new Intent(MainActivity.this, ConnectActivity.class);
+		MainActivity.this.startActivityForResult(intent, 0);
 
 	}
 	
@@ -143,6 +140,21 @@ public class MainActivity extends Activity implements OnClickListener, OnTouchLi
 		}
 	}
 
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		// TODO Auto-generated method stub
+		Bundle data = intent.getExtras();
+		String address = data.getString("address");
+		//新建ClientThread来连接小车、将按钮的操作发送到小车
+		drawThread_ = new DrawPicThd(surface_);
+		drawThread_.start();
+		netThread_ = new NetThd(address, drawThread_.handler_);
+		new Thread(netThread_).start();
+		
+	}
+	
+	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
@@ -216,5 +228,12 @@ public class MainActivity extends Activity implements OnClickListener, OnTouchLi
 		}
 
 		return false;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		netThread_.closeThd();
+		super.onDestroy();
 	}
 }

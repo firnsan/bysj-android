@@ -26,7 +26,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+		
+        <activity 
+            android:name=".ConnectActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" >
+            
+        </activity>
     </application>
 
 
