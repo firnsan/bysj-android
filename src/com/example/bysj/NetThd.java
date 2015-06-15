@@ -69,6 +69,7 @@ public class NetThd implements Runnable {
 		
 			getPicThd_ = new Thread() {
 				private byte[] buff = new byte[1000*1000]; 
+				// the size is 640*480 or 1366*768
 				private Bitmap picContext = Bitmap.createBitmap(1366, 768, Bitmap.Config.ARGB_8888);;
 				
 				@Override

@@ -71,7 +71,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:text="Vedio" />
+        android:text="Video" />
 
 </RelativeLayout>
 
